@@ -29,7 +29,8 @@ class TVHeadendRadio(CommonPlaySkill):
 
     def CPS_start(self, phrase, data):
         url = []
-        url.append(data["url"])
+#        url.append(data["url"])
+        url.append(data["http://192.168.1.166:32400/library/parts/55186/1356005815/file.mp3?X-Plex-Session-Identifier=mm9fpndwo6puydruue7dipn8&X-Plex-Product=Plex Web&X-Plex-Version=4.47.3&X-Plex-Client-Identifier=ed5wu5l4wbcdf4b3x34528so&X-Plex-Platform=Firefox&X-Plex-Platform-Version=85.0&X-Plex-Sync-Version=2&X-Plex-Features=external-media,indirect-media&X-Plex-Model=bundled&X-Plex-Device=Windows&X-Plex-Device-Name=Firefox&X-Plex-Device-Screen-Resolution=1920x910,1920x1080&X-Plex-Token=kUPMK2c7DUhgQnWEQGxy&X-Plex-Language=en-GB&Accept-Language=en-GB"])
         station = data["name"]
         if self.vlc_player.player.is_playing():
             self.vlc_player.stop()
@@ -94,7 +95,6 @@ class TVHeadendRadio(CommonPlaySkill):
                 i += 1
                 full_url = data[i].split('?', 1)
                 url = "http://" + username + ":" + password + "@" + full_url[0][7:] + '?profile=audio'
-#                url = "http://" + full_url[0][7:] + '?profile=audio'
                 i += 1
             except:
                 LOGGER.info('Problem parsing channel info (wrong format?)')

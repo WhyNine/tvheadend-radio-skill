@@ -93,8 +93,8 @@ class TVHeadendRadio(CommonPlaySkill):
                 name = extinf[1]
                 i += 1
                 full_url = data[i].split('?', 1)
-#                url = "http://" + username + ":" + password + "@" + full_url[0][7:] + '?profile=audio'
-                url = "http://" + full_url[0][7:] + '?profile=audio'
+                url = "http://" + username + ":" + password + "@" + full_url[0][7:] + '?profile=audio'
+#                url = "http://" + full_url[0][7:] + '?profile=audio'
                 i += 1
             except:
                 LOGGER.info('Problem parsing channel info (wrong format?)')

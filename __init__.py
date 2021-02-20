@@ -31,8 +31,8 @@ class TVHeadendRadio(CommonPlaySkill):
         url = []
         url.append(data["url"])
         station = data["name"]
-#        if self.vlc_player.player.is_playing():
-#            self.vlc_player.stop()
+        if self.vlc_player.player.is_playing():
+            self.vlc_player.stop()
         self.vlc_player.clear_list()
         try:
             self.vlc_player.add_list(url)
@@ -71,7 +71,6 @@ class TVHeadendRadio(CommonPlaySkill):
             name = self.settings.get('name{}'.format(i), "")
             alias = self.settings.get('alias{}'.format(i), "")
             if (len(name) > 1) and (len(alias) > 1):
-                LOGGER.info('appending')
                 names.append(name.lower())
                 aliases.append(alias)
         username = self.settings.get('username', "")
@@ -94,8 +93,8 @@ class TVHeadendRadio(CommonPlaySkill):
                 name = extinf[1]
                 i += 1
                 full_url = data[i].split('?', 1)
-                url = "http://" + username + ":" + password + "@" + full_url[0][7:] + '?profile=audio'
-#                url = "http://" + username + ":" + password + "@" + data[i][7:]
+#                url = "http://" + username + ":" + password + "@" + full_url[0][7:] + '?profile=audio'
+                url = "http://" + full_url[0][7:] + '?profile=audio'
                 i += 1
             except:
                 LOGGER.info('Problem parsing channel info (wrong format?)')

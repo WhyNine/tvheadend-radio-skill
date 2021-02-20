@@ -28,13 +28,11 @@ class TVHeadendRadio(CommonPlaySkill):
         return None
 
     def CPS_start(self, phrase, data):
-#        if self.audioservice:
-#           self.audioservice.stop()
         url = []
         url.append(data["url"])
         station = data["name"]
-        if self.vlc_player.player.is_playing():
-            self.vlc_player.stop()
+#        if self.vlc_player.player.is_playing():
+#            self.vlc_player.stop()
         self.vlc_player.clear_list()
         try:
             self.vlc_player.add_list(url)
@@ -44,7 +42,6 @@ class TVHeadendRadio(CommonPlaySkill):
             LOGGER.info(type(e))
             LOGGER.info("Unexpected error:", sys.exc_info()[0])
             raise
-#        self.audioservice.play(url)
         self.speak_dialog('start', data={"station": station}, wait=False)
 
     def handle_stop(self, message):
@@ -62,7 +59,7 @@ class TVHeadendRadio(CommonPlaySkill):
         self.settings_change_callback = self.on_settings_changed
         self.get_settings()
         self.vlc_player = VlcService(config={'duck': False})
-        self.vlc_player.normal_volume = 85
+        self.vlc_player.normal_volume = 85                                  # need to fix this, should take mycroftvolume or at least remember the last volume
         self.vlc_player.low_volume = 20
         
     def get_settings(self):
@@ -73,7 +70,6 @@ class TVHeadendRadio(CommonPlaySkill):
         for i in range(1, 6):
             name = self.settings.get('name{}'.format(i), "")
             alias = self.settings.get('alias{}'.format(i), "")
-            LOGGER.info('Settings: {} {} {}'.format(i, name, alias))
             if (len(name) > 1) and (len(alias) > 1):
                 LOGGER.info('appending')
                 names.append(name.lower())
@@ -86,8 +82,6 @@ class TVHeadendRadio(CommonPlaySkill):
             return
         url = 'http://{}:9981/playlist/channels.m3u'.format(servername)
         r = requests.get(url, auth=(username, password))
-#        LOGGER.info('returned code is {}'.format(r.status_code))
-#        LOGGER.info('returned file is\n{}'.format(r.text))
         data = r.text.splitlines()
         if (r.status_code is not 200) or (len(r.text) < 100) or (data[0] != "#EXTM3U"):
             LOGGER.info('Unable to get channel list from server or wrong format')
@@ -112,13 +106,12 @@ class TVHeadendRadio(CommonPlaySkill):
             self.channelnames.append(name.lower())
             self.channelurls.append(url)
             ch_count += 1
-#            LOGGER.info(f"Added channel {name}")
             if name.lower() in names:
                 alias = aliases[names.index(name.lower())]
                 self.channelnames.append(alias.lower())
                 self.channelurls.append(url)
                 ch_count += 1
-#                LOGGER.info(f'Added alias {alias} for channel {name}')
+                LOGGER.info(f'Added alias {alias} for channel {name}')
         LOGGER.info(f"Added {ch_count} channels")
 
 

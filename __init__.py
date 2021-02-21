@@ -1,6 +1,7 @@
 from mycroft.util.log import getLogger
 from mycroft.skills.common_play_skill import CommonPlaySkill, CPSMatchLevel
 from mycroft.audio.services.vlc import VlcService
+from mycroft.util.parse import match_one
 import requests
 import sys
 
@@ -15,23 +16,23 @@ class TVHeadendRadio(CommonPlaySkill):
             return False
 
     def CPS_match_query_phrase(self, phrase):
-        while True:
-            if phrase in self.channelnames:
-                LOGGER.info('Matched {}'.format(phrase))
-                i = self.channelnames.index(phrase)
-                data = {'url': self.channelurls[i], 'name': phrase}
-                return phrase, CPSMatchLevel.EXACT, data
-            if phrase.lower().find("radio") < 0:
-                phrase += " radio"
-            else:
-                break
+        match, confidence = match_one(phrase, self.channels)
+        r_match, r_confidence = match_one(phrase += " radio", self.channels)
+        LOGGER.info(f'Match level {confidence} for {match}')
+        LOGGER.info(f'Match level {r_confidence} for {r_match}')
+        if confidence > 0.5:
+            return (match, CPSMatchLevel.TITLE, {"channel": match})
+        if phrase.lower().find("radio") < 0:
+            if r_confidence > 0.5:
+                return (r_match, CPSMatchLevel.TITLE, {"channel": r_match})
         return None
 
     def CPS_start(self, phrase, data):
-        station = data["name"]
+        station = data["channel"]
+        url = self.channels[station]
         self.stop()
-        self.CPS_play(data["url"])
-        LOGGER.info(f"Playing from \n{data['url']}")
+        self.CPS_play(url)
+        LOGGER.info(f"Playing from \n{url}")
         self.speak_dialog('start', data={"station": station}, wait=False)
 
 
@@ -54,8 +55,7 @@ class TVHeadendRadio(CommonPlaySkill):
 #        self.vlc_player.low_volume = 20
         
     def get_settings(self):
-        self.channelnames = []
-        self.channelurls = []
+        self.channels = {}
         names = []
         aliases = []
         for i in range(1, 6):
@@ -91,13 +91,11 @@ class TVHeadendRadio(CommonPlaySkill):
             if (len(name) < 2) or (len(url) < 50):
                 LOGGER.info('Problem parsing channel info:\n' + data[i-2] + "\n" + data[i-1])
                 next
-            self.channelnames.append(name.lower())
-            self.channelurls.append(url)
+            self.channels[name.lower()] = url
             ch_count += 1
             if name.lower() in names:
                 alias = aliases[names.index(name.lower())]
-                self.channelnames.append(alias.lower())
-                self.channelurls.append(url)
+                self.channels[alias.lower()] = url
                 ch_count += 1
                 LOGGER.info(f'Added alias "{alias}" for channel "{name}"')
         LOGGER.info(f"Added {ch_count} channels")

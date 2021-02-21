@@ -27,6 +27,8 @@ class TVHeadendRadio(CommonPlaySkill):
                 break
         return None
 
+'''
+# need to register for vlc stopping/errors?
     def CPS_start(self, phrase, data):
         url = []
         url.append(data["url"])
@@ -43,6 +45,14 @@ class TVHeadendRadio(CommonPlaySkill):
             LOGGER.info("Unexpected error:", sys.exc_info()[0])
             raise
         self.speak_dialog('start', data={"station": station}, wait=False)
+        '''
+    def CPS_start(self, phrase, data):
+        station = data["name"]
+        self.stop()
+        self.CPS_play(data["url"])
+        LOGGER.info(f"Playing from \n{data['url']}")
+        self.speak_dialog('start', data={"station": station}, wait=False)
+
 
     def handle_stop(self, message):
         self.stop()
@@ -68,8 +78,8 @@ class TVHeadendRadio(CommonPlaySkill):
         names = []
         aliases = []
         for i in range(1, 6):
-            name = self.settings.get('name{}'.format(i), "")
-            alias = self.settings.get('alias{}'.format(i), "")
+            name = self.settings.get(f'name{i}', "")
+            alias = self.settings.get(f'alias{i}', "")
             if (len(name) > 1) and (len(alias) > 1):
                 names.append(name.lower())
                 aliases.append(alias)
@@ -79,7 +89,7 @@ class TVHeadendRadio(CommonPlaySkill):
         if (len(servername) == 0):
             LOGGER.info('Missing server name')
             return
-        url = 'http://{}:9981/playlist/channels.m3u'.format(servername)
+        url = f'http://{servername}:9981/playlist/channels.m3u'
         r = requests.get(url, auth=(username, password))
         data = r.text.splitlines()
         if (r.status_code is not 200) or (len(r.text) < 100) or (data[0] != "#EXTM3U"):
@@ -89,12 +99,11 @@ class TVHeadendRadio(CommonPlaySkill):
         ch_count = 0
         while i < len(data):
             try:
-                extinf = data[i].split(',', 1)
+                i += 2
+                extinf = data[i-2].split(',', 1)
                 name = extinf[1]
-                i += 1
-                full_url = data[i].split('?', 1)
-                url = "http://" + username + ":" + password + "@" + full_url[0][7:] + '?profile=audio'
-                i += 1
+                full_url = data[i-1].split('?', 1)
+                url = f"http://{username}:{password}@{full_url[0][7:]}?profile=audio"
             except:
                 LOGGER.info('Problem parsing channel info (wrong format?)')
                 next
@@ -109,7 +118,7 @@ class TVHeadendRadio(CommonPlaySkill):
                 self.channelnames.append(alias.lower())
                 self.channelurls.append(url)
                 ch_count += 1
-                LOGGER.info(f'Added alias {alias} for channel {name}')
+                LOGGER.info(f'Added alias "{alias}" for channel "{name}"')
         LOGGER.info(f"Added {ch_count} channels")
 
 

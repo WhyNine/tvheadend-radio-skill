@@ -17,7 +17,7 @@ class TVHeadendRadio(CommonPlaySkill):
 
     def CPS_match_query_phrase(self, phrase):
         match, confidence = match_one(phrase, self.channels)
-        r_match, r_confidence = match_one(phrase += " radio", self.channels)
+        r_match, r_confidence = match_one(phrase + " radio", self.channels)
         LOGGER.info(f'Match level {confidence} for {match}')
         LOGGER.info(f'Match level {r_confidence} for {r_match}')
         if confidence > 0.5:

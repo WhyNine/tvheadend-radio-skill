@@ -1,6 +1,7 @@
 from mycroft.util.log import getLogger
 from mycroft.skills.common_play_skill import CommonPlaySkill, CPSMatchLevel
 from mycroft.audio.services.vlc import VlcService
+from mycroft.skills.audioservice import AudioService
 from mycroft.util.parse import match_one
 import requests
 import sys
@@ -56,9 +57,7 @@ class TVHeadendRadio(CommonPlaySkill):
     def initialize(self):
         self.settings_change_callback = self.on_settings_changed
         self.get_settings()
-        self.vlc_player = VlcService(config={'duck': False})
-#        self.vlc_player.normal_volume = 85                                  # need to fix this, should take mycroftvolume or at least remember the last volume
-#        self.vlc_player.low_volume = 20
+        LOGGER.info(AudioService.available_backends())
         
     def get_settings(self):
         self.channels = {}

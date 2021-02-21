@@ -18,18 +18,24 @@ class TVHeadendRadio(CommonPlaySkill):
     def CPS_match_query_phrase(self, phrase):
         match, confidence = match_one(phrase, self.channels)
         r_match, r_confidence = match_one(phrase + " radio", self.channels)
-        LOGGER.info(f'Match level {confidence} for {match}')
-        LOGGER.info(f'Match level {r_confidence} for {r_match}')
-        if confidence > 0.5:
-            return (match, CPSMatchLevel.TITLE, {"channel": match})
-        if phrase.lower().find("radio") < 0:
-            if r_confidence > 0.5:
-                return (r_match, CPSMatchLevel.TITLE, {"channel": r_match})
+        LOGGER.info(f'Match level {confidence} for {phrase}')
+        LOGGER.info(f'Match level {r_confidence} for {phrase} radio')
+        if confidence == 1:
+            return (match, CPSMatchLevel.EXACT, {"url": match})
+        if r_confidence == 1:
+            return (r_match, CPSMatchLevel.EXACT, {"url": r_match})
+        if confidence > 0.8:
+            return (match, CPSMatchLevel.MULTI_KEY, {"url": match})
+        if r_confidence > 0.8:
+            return (r_match, CPSMatchLevel.MULTI_KEY, {"url": r_match})
         return None
 
     def CPS_start(self, phrase, data):
-        station = data["channel"]
-        url = self.channels[station]
+        url = data["url"]
+        key_list = list(self.channels.keys())
+        val_list = list(self.channels.values())
+        pos = val_list.index(url)
+        station = key_list[pos]
         self.stop()
         self.CPS_play(url)
         LOGGER.info(f"Playing from \n{url}")

@@ -45,7 +45,7 @@ class TVHeadendRadio(CommonPlaySkill):
             LOGGER.info("Unexpected error:", sys.exc_info()[0])
             raise
         self.speak_dialog('start', data={"station": station}, wait=False)
-        '''
+'''
     def CPS_start(self, phrase, data):
         station = data["name"]
         self.stop()

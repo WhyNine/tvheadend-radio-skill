@@ -27,25 +27,6 @@ class TVHeadendRadio(CommonPlaySkill):
                 break
         return None
 
-'''
-# need to register for vlc stopping/errors?
-    def CPS_start(self, phrase, data):
-        url = []
-        url.append(data["url"])
-        station = data["name"]
-        if self.vlc_player.player.is_playing():
-            self.vlc_player.stop()
-        self.vlc_player.clear_list()
-        try:
-            self.vlc_player.add_list(url)
-            self.vlc_player.play()
-            LOGGER.info(f"Playing from \n{url}")
-        except Exception as e:
-            LOGGER.info(type(e))
-            LOGGER.info("Unexpected error:", sys.exc_info()[0])
-            raise
-        self.speak_dialog('start', data={"station": station}, wait=False)
-'''
     def CPS_start(self, phrase, data):
         station = data["name"]
         self.stop()

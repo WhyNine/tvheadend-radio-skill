@@ -20,7 +20,7 @@ class TVHeadendRadio(CommonPlaySkill):
                 LOGGER.info('Matched {}'.format(phrase))
                 i = self.channelnames.index(phrase)
                 data = {'url': self.channelurls[i], 'name': phrase}
-                return phrase, CPSMatchLevel.TITLE, data
+                return phrase, CPSMatchLevel.EXACT, data
             if phrase.lower().find("radio") < 0:
                 phrase += " radio"
             else:
@@ -59,8 +59,8 @@ class TVHeadendRadio(CommonPlaySkill):
         self.settings_change_callback = self.on_settings_changed
         self.get_settings()
         self.vlc_player = VlcService(config={'duck': False})
-        self.vlc_player.normal_volume = 85                                  # need to fix this, should take mycroftvolume or at least remember the last volume
-        self.vlc_player.low_volume = 20
+#        self.vlc_player.normal_volume = 85                                  # need to fix this, should take mycroftvolume or at least remember the last volume
+#        self.vlc_player.low_volume = 20
         
     def get_settings(self):
         self.channelnames = []

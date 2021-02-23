@@ -8,6 +8,7 @@ This skill plays a channel from a TVHeadend server, using the audio profile as d
 The skill needs to know some details of the TVHeadend server so that it can retrieve the channel list and then to stream the requested channel. Specifically, it needs to have:
 * The server name or IP address, such that the skill can locate the server using the URL "http://<server_name>:9981/"
 * A username and password that will enable the skill to access the server (this user does not need to have admin rights)
+
 In addition, up to five aliases can be entered. This allows for shortcuts to favourite channels, particularly useful if the voice recognition doesn't like the abbreviations or acronyms in the channel name.
 
 ## Examples

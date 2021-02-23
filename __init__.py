@@ -38,7 +38,7 @@ class TVHeadendRadio(CommonPlaySkill):
         pos = val_list.index(url)
         station = key_list[pos]
         self.stop()
-        self.CPS_play(url, self.backend)
+        self.CPS_play(url, utterance=self.backend)
         LOGGER.info(f"Playing from \n{url}")
         self.speak_dialog('start', data={"station": station}, wait=False)
 

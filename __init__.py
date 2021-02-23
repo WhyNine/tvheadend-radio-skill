@@ -38,7 +38,7 @@ class TVHeadendRadio(CommonPlaySkill):
         pos = val_list.index(url)
         station = key_list[pos]
         self.stop()
-        self.CPS_play(url, "vlc")
+        self.CPS_play(url, self.backend)
         LOGGER.info(f"Playing from \n{url}")
         self.speak_dialog('start', data={"station": station}, wait=False)
 
@@ -59,11 +59,10 @@ class TVHeadendRadio(CommonPlaySkill):
         self.get_settings()
         self.audio = AudioService(self.bus)
         backends = self.audio.available_backends()
-        LOGGER.info(list(backends.keys()))
-        LOGGER.info(backends)
         self.backend = {}
-        self.backend["vlc"] = backends["vlc"]
-        LOGGER.info(self.backend)
+        if "vlc" in backends.keys():
+            self.backend["vlc"] = backends["vlc"]
+            LOGGER.info(self.backend)
         
     def get_settings(self):
         self.channels = {}

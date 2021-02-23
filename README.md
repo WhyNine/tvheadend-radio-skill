@@ -1,4 +1,4 @@
-# <img src="https://raw.githack.com/FortAwesome/Font-Awesome/master/svgs/solid/hat-wizard.svg" card_color="#3C2C4D" width="50" height="50" style="vertical-align:bottom"/> TVHeadend Radio
+# <img src="https://tvheadend.org/favicon.ico" width="50" height="50" style="vertical-align:bottom"/> TVHeadend Radio
 Plays audio streams from a TVHeadend server
 
 ## About

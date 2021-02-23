@@ -9,7 +9,7 @@ skillMetadata:
       fields:
         - name: servername
           type: text
-          label: TVHeadend server name
+          label: TVHeadend server name or IP address
           value: ""
         - name: username
           type: text

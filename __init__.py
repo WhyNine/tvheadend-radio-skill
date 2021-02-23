@@ -9,13 +9,6 @@ import sys
 LOGGER = getLogger(__name__)
 
 class TVHeadendRadio(CommonPlaySkill):
-    def exists_url(self, url):
-        r = requests.head(url)
-        if r.status_code < 400:
-            return True
-        else:
-            return False
-
     def CPS_match_query_phrase(self, phrase):
         match, confidence = match_one(phrase, self.channels)
         r_match, r_confidence = match_one(phrase + " radio", self.channels)
@@ -43,10 +36,6 @@ class TVHeadendRadio(CommonPlaySkill):
         self.speak_dialog('start', data={"station": station}, wait=False)
 
 
-    def handle_stop(self, message):
-        self.stop()
-        self.speak_dialog('stop', data={"station": station}, wait=False)
-
     def on_settings_changed(self):
         self.get_settings()
 
@@ -62,7 +51,7 @@ class TVHeadendRadio(CommonPlaySkill):
         self.backend = {}
         if "vlc" in backends.keys():
             self.backend["vlc"] = backends["vlc"]
-            LOGGER.info(self.backend)
+            LOGGER.info("Set vlc as backend to be used")
         
     def get_settings(self):
         self.channels = {}

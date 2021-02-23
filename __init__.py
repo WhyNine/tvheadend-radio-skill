@@ -58,8 +58,12 @@ class TVHeadendRadio(CommonPlaySkill):
         self.settings_change_callback = self.on_settings_changed
         self.get_settings()
         self.audio = AudioService(self.bus)
-        LOGGER.info(list(self.audio.available_backends().keys()))
-        LOGGER.info(self.audio.available_backends())
+        backends = self.audio.available_backends()
+        LOGGER.info(list(backends.keys()))
+        LOGGER.info(backends)
+        self.backend = {}
+        self.backend["vlc"] = backends["vlc"]
+        LOGGER.info(self.backend)
         
     def get_settings(self):
         self.channels = {}

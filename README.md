@@ -1,8 +1,26 @@
-# <img src="https://tvheadend.org/favicon.ico" width="50" height="50" style="vertical-align:bottom"/> TVHeadend Radio
+# <img src='https://raw.githack.com/FortAwesome/Font-Awesome/master/svgs/solid/headphones.svg' card_color='#DB4E40' width='50' height='50' style='vertical-align:bottom'/> TVHeadend Radio
 Plays audio streams from a TVHeadend server
 
 ## About
 This skill plays a channel from a TVHeadend server, using the audio profile as defined on the server (this means that the video on TV channels is not streamed or decoded). The user can enter aliases for up to five channels to make it easier to request these channels.
+
+
+## Examples
+* "Play BBC Radio 2 (where 'BBC Radio 2' is the name of a radio channel)"
+* "Play local radio (where 'local radio' is an alias for a channel)"
+* "Play Capital radio (where the radio channel is called 'Capital')"
+* "Play BBC 1 HD (where 'BBC 1 HD' is a TV channel)"
+
+## Credits
+Simon Waller
+
+## Category
+Music
+
+## Tags
+#Radio
+#TVHeadend
+
 
 ## Settings
 The skill needs to know some details of the TVHeadend server so that it can retrieve the channel list and then to stream the requested channel. Specifically, it needs to have:
@@ -10,19 +28,3 @@ The skill needs to know some details of the TVHeadend server so that it can retr
 * A username and password that will enable the skill to access the server (this user does not need to have admin rights)
 
 In addition, up to five aliases can be entered. This allows for shortcuts to favourite channels, particularly useful if the voice recognition doesn't like the abbreviations or acronyms in the channel name.
-
-## Examples
-* "Play BBC Radio 2" (where 'BBC Radio 2' is the name of a radio channel)
-* "Play local radio" (where 'local radio' is an alias for a channel)
-* "Play Capital radio" (where the radio channel is called 'Capital')
-* "Play BBC 1 HD" (where 'BBC 1 HD' is a TV channel)
-
-## Credits
-Simon Waller
-
-## Category
-**Music & Audio**
-
-## Tags
-#Radio
-#TVHeadend

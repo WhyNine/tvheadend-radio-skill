@@ -1,10 +1,6 @@
 
 skillMetadata:
   sections:
-    - name: Radio stations
-      fields:
-        - type: label
-          label: Enter the TVHeadend server details and the aliases for some of the channels. 
     - name: TVHeadend server details
       fields:
         - name: servername

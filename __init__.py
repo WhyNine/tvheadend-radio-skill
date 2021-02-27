@@ -1,6 +1,5 @@
 from mycroft.util.log import getLogger
 from mycroft.skills.common_play_skill import CommonPlaySkill, CPSMatchLevel
-from mycroft.audio.services.vlc import VlcService
 from mycroft.skills.audioservice import AudioService
 from mycroft.util.parse import match_one
 import requests

@@ -6,10 +6,12 @@ This skill plays a channel from a TVHeadend server, using the audio profile as d
 
 
 ## Examples
-* "Play BBC Radio 2 (where 'BBC Radio 2' is the name of a radio channel)"
-* "Play local radio (where 'local radio' is an alias for a channel)"
-* "Play Capital radio (where the radio channel is called 'Capital')"
-* "Play BBC 1 HD (where 'BBC 1 HD' is a TV channel)"
+* "Play <radio channel>"
+* "Play <channel alias>"
+* "Play <radio channel> radio"
+* "Play <radio channel> on TVHeadend"
+* "Play <channel alias> on TVHeadend"
+* "Play <radio channel> radio on TVHeadend"
 
 ## Credits
 Simon Waller

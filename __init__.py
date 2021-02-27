@@ -40,7 +40,6 @@ class TVHeadendRadio(CommonPlaySkill):
 
     def __init__(self):
         super().__init__(name="TVHeadendRadio")
-        self.vlc_player = None
 
     def initialize(self):
         self.settings_change_callback = self.on_settings_changed
@@ -50,7 +49,7 @@ class TVHeadendRadio(CommonPlaySkill):
         self.backend = {}
         if "vlc" in backends.keys():
             self.backend["vlc"] = backends["vlc"]
-            LOGGER.info("Set vlc as backend to be used")
+            LOGGER.debug("Set vlc as backend to be used")
         
     def get_settings(self):
         self.channels = {}

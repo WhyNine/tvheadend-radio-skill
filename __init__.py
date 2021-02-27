@@ -23,7 +23,7 @@ class TVHeadendRadio(CommonPlaySkill):
         match = re.search(self.translate_regex('on_tvheadend'), phrase)
         if match:
             data = re.sub(self.translate_regex('on_tvheadend'), '', phrase)
-            LOGGER.info(f"Found '{data}' with 'on_tvheadend' in '{phrase}'")
+            LOGGER.debug(f"Found '{data}' with 'on_tvheadend' in '{phrase}'")
             phrase = data
         match, confidence = match_one(phrase, self.channels)
         r_match, r_confidence = match_one(phrase + " radio", self.channels)

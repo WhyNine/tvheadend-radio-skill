@@ -109,7 +109,7 @@ class TVHeadendRadio(CommonPlaySkill):
                 alias = aliases[names.index(name.lower())]
                 self.channels[alias.lower()] = url
                 ch_count += 1
-                LOGGER.info(f'Added alias "{alias}" for channel "{name}"')
+                LOGGER.debug(f'Added alias "{alias}" for channel "{name}"')
         LOGGER.info(f"Added {ch_count} channels")
 
 

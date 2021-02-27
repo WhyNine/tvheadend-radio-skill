@@ -66,6 +66,7 @@ class TVHeadendRadio(CommonPlaySkill):
         if "vlc" in backends.keys():
             self.backend["vlc"] = backends["vlc"]
             LOGGER.debug("Set vlc as backend to be used")
+        self.regexes = {}
         
     def get_settings(self):
         self.channels = {}

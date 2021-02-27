@@ -8,7 +8,22 @@ import sys
 LOGGER = getLogger(__name__)
 
 class TVHeadendRadio(CommonPlaySkill):
+    # Get the correct localised regex
+    def translate_regex(self, regex):
+        if regex not in self.regexes:
+            path = self.find_resource(regex + '.regex')
+            if path:
+                with open(path) as f:
+                    string = f.read().strip()
+                self.regexes[regex] = string
+        return self.regexes[regex]
+
     def CPS_match_query_phrase(self, phrase):
+        match = re.search(self.translate_regex('on_tvheadend'), phrase)
+        if match:
+            data = re.sub(self.translate_regex('on_tvheadend'), '', phrase)
+            LOGGER.info(f"Found '{data}' with 'on_tvheadend' in '{phrase}'")
+            phrase = data
         match, confidence = match_one(phrase, self.channels)
         r_match, r_confidence = match_one(phrase + " radio", self.channels)
         LOGGER.debug(f'Match level {confidence} for {phrase}')

@@ -85,10 +85,14 @@ class TVHeadendRadio(CommonPlaySkill):
             LOGGER.info('Missing server name')
             return
         url = f'http://{servername}:9981/playlist/channels.m3u'
-        r = requests.get(url, auth=(username, password))
-        data = r.text.splitlines()
-        if (r.status_code is not 200) or (len(r.text) < 100) or (data[0] != "#EXTM3U"):
-            LOGGER.info('Unable to get channel list from server or wrong format')
+        try:
+            r = requests.get(url, auth=(username, password))
+            data = r.text.splitlines()
+            if (r.status_code is not 200) or (len(r.text) < 100) or (data[0] != "#EXTM3U"):
+                LOGGER.info('Unable to get channel list from server or wrong format')
+                return
+        except:
+            LOGGER.info('Unable to contact tvheadend server')
             return
         i = 1
         ch_count = 0

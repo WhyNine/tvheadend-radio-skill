@@ -81,6 +81,8 @@ class TVHeadendRadio(CommonPlaySkill):
         self.backend = {}
         if "vlc" in backends.keys():
             self.backend["vlc"] = backends["vlc"]
+            self.backend["vlc"]["normal_volume"] = 80
+            self.backend["vlc"]["duck_volume"] = 5
             LOGGER.debug("Set vlc as backend to be used")
         self.regexes = {}
         

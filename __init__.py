@@ -16,9 +16,10 @@ from mycroft.util.log import getLogger
 from mycroft.skills.common_play_skill import CommonPlaySkill, CPSMatchLevel
 from mycroft.skills.audioservice import AudioService
 from mycroft.util.parse import match_one
+from mycroft.util import connected
 import re
 import requests
-import sys
+import datetime
 
 LOGGER = getLogger(__name__)
 
@@ -88,54 +89,60 @@ class TVHeadendRadio(CommonPlaySkill):
         
     def get_settings(self):
         self.channels = {}
-        names = []
-        aliases = []
-        for i in range(1, 6):
-            name = self.settings.get(f'name{i}', "")
-            alias = self.settings.get(f'alias{i}', "")
-            if (len(name) > 1) and (len(alias) > 1):
-                names.append(name.lower())
-                aliases.append(alias)
-        username = self.settings.get('username', "")
-        password = self.settings.get('password', "")
         servername = self.settings.get('servername', "")
         if (len(servername) == 0):
             LOGGER.info('Missing server name')
             return
+        self.check_internet()
+
+    def check_internet(self):
+        LOGGER.info("Checking for connection to tvheadend server")
+        names = []
+        aliases = []
+        username = self.settings.get('username', "")
+        password = self.settings.get('password', "")
+        servername = self.settings.get('servername', "")
         url = f'http://{servername}:9981/playlist/channels.m3u'
         try:
             r = requests.get(url, auth=(username, password))
             data = r.text.splitlines()
             if (r.status_code is not 200) or (len(r.text) < 100) or (data[0] != "#EXTM3U"):
-                LOGGER.info('Unable to get channel list from server or wrong format')
+                LOGGER.info('Unable to get channel list from tvheadend server or wrong format')
+                self.schedule_event(self.check_internet, datetime.datetime.now() + datetime.timedelta(minutes=5))
                 return
+            for i in range(1, 6):
+                name = self.settings.get(f'name{i}', "")
+                alias = self.settings.get(f'alias{i}', "")
+                if (len(name) > 1) and (len(alias) > 1):
+                    names.append(name.lower())
+                    aliases.append(alias)
+            i = 1
+            ch_count = 0
+            while i < len(data):
+                try:
+                    i += 2
+                    extinf = data[i-2].split(',', 1)
+                    name = extinf[1]
+                    full_url = data[i-1].split('?', 1)
+                    url = f"http://{username}:{password}@{full_url[0][7:]}?profile=audio"
+                except:
+                    LOGGER.info('Problem parsing channel info (wrong format?)')
+                    next
+                if (len(name) < 2) or (len(url) < 50):
+                    LOGGER.info('Problem parsing channel info:\n' + data[i-2] + "\n" + data[i-1])
+                    next
+                self.channels[name.lower()] = url
+                ch_count += 1
+                if name.lower() in names:
+                    alias = aliases[names.index(name.lower())]
+                    self.channels[alias.lower()] = url
+                    ch_count += 1
+                    LOGGER.debug(f'Added alias "{alias}" for channel "{name}"')
+            LOGGER.info(f"Added {ch_count} channels")
         except:
             LOGGER.info('Unable to contact tvheadend server')
+            self.schedule_event(self.check_internet, datetime.datetime.now() + datetime.timedelta(minutes=1))
             return
-        i = 1
-        ch_count = 0
-        while i < len(data):
-            try:
-                i += 2
-                extinf = data[i-2].split(',', 1)
-                name = extinf[1]
-                full_url = data[i-1].split('?', 1)
-                url = f"http://{username}:{password}@{full_url[0][7:]}?profile=audio"
-            except:
-                LOGGER.info('Problem parsing channel info (wrong format?)')
-                next
-            if (len(name) < 2) or (len(url) < 50):
-                LOGGER.info('Problem parsing channel info:\n' + data[i-2] + "\n" + data[i-1])
-                next
-            self.channels[name.lower()] = url
-            ch_count += 1
-            if name.lower() in names:
-                alias = aliases[names.index(name.lower())]
-                self.channels[alias.lower()] = url
-                ch_count += 1
-                LOGGER.debug(f'Added alias "{alias}" for channel "{name}"')
-        LOGGER.info(f"Added {ch_count} channels")
-
 
 def create_skill():
     return TVHeadendRadio()

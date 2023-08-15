@@ -66,9 +66,9 @@ class TVHeadendRadio(CommonPlaySkill):
         self.stop()
         LOGGER.info(f"Playing from \n{url}")
         self.speak_dialog('start', data={"station": station}, wait=True)
-        self.add_event("mycroft.stop.handled", self.wake_up_recognizer, once=True)
-        self.CPS_play(url, utterance=self.backend)
         self.add_event("mycroft.audio.service.play", self.sleep_recognizer, once=True)
+        self.CPS_play(url, utterance=self.backend)
+        self.add_event("mycroft.stop.handled", self.wake_up_recognizer, once=True)
 
     def on_settings_changed(self):
         self.get_settings()

@@ -16,7 +16,7 @@ from mycroft.util.log import getLogger
 from mycroft.skills.common_play_skill import CommonPlaySkill, CPSMatchLevel
 from mycroft.skills.audioservice import AudioService
 from mycroft.util.parse import match_one
-from mycroft.util import connected
+from mycroft.messagebus.message import Message
 import re
 import requests
 import datetime
@@ -57,6 +57,7 @@ class TVHeadendRadio(CommonPlaySkill):
         return None
 
     def CPS_start(self, phrase, data):
+        self.wake_up_recognizer()
         url = data["url"]
         key_list = list(self.channels.keys())
         val_list = list(self.channels.values())
@@ -74,6 +75,12 @@ class TVHeadendRadio(CommonPlaySkill):
     def __init__(self):
         super().__init__(name="TVHeadendRadio")
 
+    def wake_up_recognizer(self):
+        self.bus.emit(Message('recognizer_loop:wake_up'))
+
+    def sleep_recognizer(self):
+        self.bus.emit(Message('recognizer_loop:sleep'))
+
     def initialize(self):
         self.settings_change_callback = self.on_settings_changed
         self.get_settings()
@@ -85,6 +92,8 @@ class TVHeadendRadio(CommonPlaySkill):
             self.backend["vlc"]["normal_volume"] = 70
             self.backend["vlc"]["duck_volume"] = 5
             LOGGER.debug("Set vlc as backend to be used")
+            self.add_event("mycroft.stop.handled", self.wake_up_recognizer)
+            self.add_event("mycroft.audio.service.play", self.sleep_recognizer)
         self.regexes = {}
         
     def get_settings(self):

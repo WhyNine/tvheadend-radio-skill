@@ -57,7 +57,7 @@ class TVHeadendRadio(CommonPlaySkill):
         return None
 
     def CPS_start(self, phrase, data):
-        self.wake_up_recognizer()
+        self.wake_up_recognizer(None)
         url = data["url"]
         key_list = list(self.channels.keys())
         val_list = list(self.channels.values())

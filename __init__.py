@@ -76,11 +76,11 @@ class TVHeadendRadio(CommonPlaySkill):
     def __init__(self):
         super().__init__(name="TVHeadendRadio")
 
-    def wake_up_recognizer(self):
+    def wake_up_recognizer(self, message):
         LOGGER.info("Waking up recognizer")
         self.bus.emit(Message('recognizer_loop:wake_up'))
 
-    def sleep_recognizer(self):
+    def sleep_recognizer(self, message):
         LOGGER.info("Sleeping recognizer")
         self.bus.emit(Message('recognizer_loop:sleep'))
 

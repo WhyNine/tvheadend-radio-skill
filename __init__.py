@@ -66,8 +66,9 @@ class TVHeadendRadio(CommonPlaySkill):
         self.stop()
         self.CPS_play(url, utterance=self.backend)
         LOGGER.info(f"Playing from \n{url}")
+        self.add_event("mycroft.stop.handled", self.wake_up_recognizer, once=True)
+        self.add_event("mycroft.audio.service.play", self.sleep_recognizer, once=True)
         self.speak_dialog('start', data={"station": station}, wait=False)
-
 
     def on_settings_changed(self):
         self.get_settings()
@@ -92,8 +93,6 @@ class TVHeadendRadio(CommonPlaySkill):
             self.backend["vlc"]["normal_volume"] = 70
             self.backend["vlc"]["duck_volume"] = 5
             LOGGER.debug("Set vlc as backend to be used")
-            self.add_event("mycroft.stop.handled", self.wake_up_recognizer)
-            self.add_event("mycroft.audio.service.play", self.sleep_recognizer)
         self.regexes = {}
         
     def get_settings(self):

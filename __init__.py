@@ -80,6 +80,7 @@ class TVHeadendRadio(CommonPlaySkill):
         self.audio = AudioService(self.bus)
         backends = self.audio.available_backends()
         self.backend = {}
+        LOGGER.info(backends.keys())
         if "vlc" in backends.keys():
             self.backend["vlc"] = backends["vlc"]
             self.backend["vlc"]["normal_volume"] = 70

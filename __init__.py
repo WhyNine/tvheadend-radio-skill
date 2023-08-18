@@ -66,7 +66,6 @@ class TVHeadendRadio(CommonPlaySkill):
         self.stop()
         LOGGER.info(f"Playing from \n{url}")
         self.speak_dialog('start', data={"station": station}, wait=True)
-        self.add_event("mycroft.audio.service.play", self.sleep_recognizer, once=True)
         self.CPS_play(url, utterance=self.backend)
 
     def on_settings_changed(self):
@@ -74,15 +73,6 @@ class TVHeadendRadio(CommonPlaySkill):
 
     def __init__(self):
         super().__init__(name="TVHeadendRadio")
-
-    def wake_up_recognizer(self, message):
-        LOGGER.info("Waking up recognizer")
-        self.bus.emit(Message('recognizer_loop:wake_up'))
-
-    def sleep_recognizer(self, message):
-        LOGGER.info("Sleeping recognizer")
-        self.bus.emit(Message('recognizer_loop:sleep'))
-        self.add_event("mycroft.stop.handled", self.wake_up_recognizer, once=True)
 
     def initialize(self):
         self.settings_change_callback = self.on_settings_changed

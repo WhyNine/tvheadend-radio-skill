@@ -73,6 +73,10 @@ class TVHeadendRadio(CommonPlaySkill):
     def __init__(self):
         super().__init__(name="TVHeadendRadio")
 
+    def __init__(self, *args, **kwargs):
+        super(TVHeadendRadio, self).__init__(*args, **kwargs)
+        self.skill_id = "whynine-tvheadenradio-skill"
+
     def initialize(self):
         self.settings_change_callback = self.on_settings_changed
         self.get_settings()

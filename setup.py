@@ -61,7 +61,7 @@ setup(
     long_description=long_description,
     url=URL,
     author="Simon Waller",
-    author_email="WhyNine@users.noreply.github.com>",
+    author_email="WhyNine@users.noreply.github.com",
     license="Apache-2.0",
     package_dir={SKILL_PKG: ""},
     package_data={SKILL_PKG: find_resource_files()},

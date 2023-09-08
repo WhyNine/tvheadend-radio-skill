@@ -10,7 +10,7 @@ PYPI_NAME = "tvheadend-radio-skill"  # pip install PYPI_NAME
 # below derived from github url to ensure standard skill_id
 SKILL_NAME = "tvheadend-radio-skill"
 SKILL_PKG = SKILL_NAME.lower().replace("-", "_")
-PLUGIN_ENTRY_POINT = f"{SKILL_NAME}.whynine={SKILL_PKG}:TVHeadendRadio"
+PLUGIN_ENTRY_POINT = f"{SKILL_PKG}.whynine={SKILL_PKG}:TVHeadendRadio"
 
 
 def get_requirements(requirements_filename: str):

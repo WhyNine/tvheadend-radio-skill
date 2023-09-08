@@ -5,14 +5,12 @@ import os
 BASEDIR = path.abspath(path.dirname(__file__))
 URL = "https://github.com/WhyNine/tvheadend-radio-skill"
 SKILL_CLAZZ = "TVHeadendRadio"  # needs to match __init__.py class name
-PYPI_NAME = "whynine-tvheadenradio-skill"  # pip install PYPI_NAME
+PYPI_NAME = "tvheadend-radio-skill"  # pip install PYPI_NAME
 
 # below derived from github url to ensure standard skill_id
-SKILL_AUTHOR, SKILL_NAME = URL.split(".com/")[-1].split("/")
+SKILL_NAME = "tvheadend-radio-skillr"
 SKILL_PKG = SKILL_NAME.lower().replace("-", "_")
-PLUGIN_ENTRY_POINT = (
-    f"{SKILL_NAME.lower()}.{SKILL_AUTHOR.lower()}={SKILL_PKG}:{SKILL_CLAZZ}"
-)
+PLUGIN_ENTRY_POINT = f"{SKILL_NAME}.whynine={SKILL_PKG}:TVHeadendRadio"
 
 
 def get_requirements(requirements_filename: str):
@@ -59,7 +57,7 @@ with open("./tvheadend_radio_skill/version.py", "r", encoding="utf-8") as v:
 setup(
     name=PYPI_NAME,
     version=version,
-    description="NRadio player using a TVheadend URL as the source",
+    description="Radio player using a TVheadend URL as the source",
     long_description=long_description,
     url=URL,
     author="Simon Waller",

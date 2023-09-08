@@ -13,9 +13,10 @@
 # limitations under the License.
 #
 from mycroft.util.log import getLogger
-from mycroft.skills.common_play_skill import CommonPlaySkill, CPSMatchLevel
+from mycroft.skills.common_play_skill import CPSMatchLevel
 from mycroft.skills.audioservice import AudioService
 from mycroft.util.parse import match_one
+from ovos_workshop.skills.common_play import OVOSCommonPlaybackSkill
 import re
 import requests
 import datetime
@@ -23,7 +24,7 @@ import datetime
 LOGGER = getLogger(__name__)
 
 
-class TVHeadendRadio(CommonPlaySkill):
+class TVHeadendRadio(OVOSCommonPlaybackSkill):
     # Get the correct localised regex
     def translate_regex(self, regex):
         if regex not in self.regexes:
@@ -69,9 +70,6 @@ class TVHeadendRadio(CommonPlaySkill):
 
     def on_settings_changed(self):
         self.get_settings()
-
-    def __init__(self):
-        super().__init__(name="TVHeadendRadio")
 
     def __init__(self, *args, **kwargs):
         super(TVHeadendRadio, self).__init__(*args, **kwargs)

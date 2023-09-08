@@ -1,3 +1,7 @@
 {
-  "activestate.promptRuntimeCreation": false
+  "activestate.promptRuntimeCreation": false,
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter"
+  },
+  "python.formatting.provider": "none"
 }

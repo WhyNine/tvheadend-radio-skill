@@ -1,0 +1,29 @@
+[build-system]
+requires = ["poetry_core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "tvheadend-radio-skill"
+version = "0.1"
+description = "Radio player using a TVheadend URL as the source"
+authors = ["Simon Waller <whynine@users.noreply.github.com>"]
+readme = "README.md"
+license = "Apache-2.0"
+include = ["locales/*"]
+
+[tool.poetry.dependencies]
+python = "^3.7"
+pfzy = "*"
+ovos-utils = { version = "*", allow-prereleases = true }
+ovos-bus-client = { version = "*", allow-prereleases = true }
+ovos-workshop = { version = "~=0.0.12a27", allow-prereleases = true }
+ovos-core = { version = "*", allow-prereleases = true }
+
+[tool.poetry.group.dev.dependencies]
+requests = "*"
+
+[tool.poetry.scripts]
+"tvheadend-radio-skill" = "tvheadend_radio_skill:TVHeadendRadio"
+
+[tool.poetry.plugins."ovos.plugin.skill"]
+"tvheadend_radio_skill.whynine" = "tvheadend_radio_skill:TVHeadendRadio"

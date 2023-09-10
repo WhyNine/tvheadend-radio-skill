@@ -8,12 +8,12 @@ This skill was originally written for Mycroft but has been migrated to OVOS.
 
 
 ## Examples
-* "Play <radio channel>"
-* "Play <channel alias>"
-* "Play <radio channel> radio"
-* "Play <radio channel> on TVHeadend"
-* "Play <channel alias> on TVHeadend"
-* "Play <radio channel> radio on TVHeadend"
+* "Play < radio channel >"
+* "Play < channel alias >"
+* "Play < radio channel > radio"
+* "Play < radio channel > on TVHeadend"
+* "Play < channel alias > on TVHeadend"
+* "Play < radio channel > radio on TVHeadend"
 
 ## Credits
 Simon Waller

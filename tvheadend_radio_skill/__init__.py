@@ -15,8 +15,9 @@
 from mycroft.util.log import getLogger
 from mycroft.skills.common_play_skill import CPSMatchLevel
 from mycroft.skills.audioservice import AudioService
-from mycroft.util.parse import match_one
+from ovos_utils.parse import match_one
 from ovos_workshop.skills.common_play import OVOSCommonPlaybackSkill
+from ovos_plugin_common_play.ocp import MediaType, PlaybackType
 import re
 import requests
 import datetime
@@ -35,7 +36,8 @@ class TVHeadendRadio(OVOSCommonPlaybackSkill):
                 self.regexes[regex] = string
         return self.regexes[regex]
 
-    def CPS_match_query_phrase(self, phrase):
+    @ocp_search()
+    def search_my_skill(self, phrase, media_type=MediaType.GENERIC):
         if len(self.channels) == 0:
             return None
         match = re.search(self.translate_regex("on_tvheadend"), phrase)
@@ -44,18 +46,31 @@ class TVHeadendRadio(OVOSCommonPlaybackSkill):
             LOGGER.debug(f"Found '{data}' with 'on_tvheadend' in '{phrase}'")
             phrase = data
         match, confidence = match_one(phrase, self.channels)
-        r_match, r_confidence = match_one(phrase + " radio", self.channels)
+        key_list = list(self.channels.keys())
+        val_list = list(self.channels.values())
+        pos = val_list.index(match)
+        station = key_list[pos]
         LOGGER.info(f"Match level {confidence} for {phrase}")
+        yield {
+          "match_confidence": confidence * 100,
+          "media_type": MediaType.RADIO,
+          "uri": match,
+          "title": station,
+          "playback": PlaybackType.AUDIO,
+          "skill_id": self.skill_id            
+        }
+        r_match, r_confidence = match_one(phrase + " radio", self.channels)
         LOGGER.info(f"Match level {r_confidence} for {phrase} radio")
-        if confidence == 1:
-            return (match, CPSMatchLevel.EXACT, {"url": match})
-        if r_confidence == 1:
-            return (r_match, CPSMatchLevel.EXACT, {"url": r_match})
-        if confidence > 0.8:
-            return (match, CPSMatchLevel.MULTI_KEY, {"url": match})
-        if r_confidence > 0.8:
-            return (r_match, CPSMatchLevel.MULTI_KEY, {"url": r_match})
-        return None
+        pos = val_list.index(r_match)
+        station = key_list[pos]
+        return {
+          "match_confidence": r_confidence * 100,
+          "media_type": MediaType.RADIO,
+          "uri": r_match,
+          "title": station,
+          "playback": PlaybackType.AUDIO,
+          "skill_id": self.skill_id            
+        }
 
     def CPS_start(self, phrase, data):
         url = data["url"]
@@ -74,6 +89,9 @@ class TVHeadendRadio(OVOSCommonPlaybackSkill):
     def __init__(self, *args, **kwargs):
         super(TVHeadendRadio, self).__init__(*args, **kwargs)
         self.skill_id = "whynine-tvheadenradio-skill"
+        self.supported_media = [MediaType.GENERIC,
+                                MediaType.RADIO,
+                                MediaType.MUSIC]
 
     def initialize(self):
         self.settings_change_callback = self.on_settings_changed

@@ -12,17 +12,14 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from mycroft.util.log import getLogger
-from mycroft.skills.common_play_skill import CPSMatchLevel
 from mycroft.skills.audioservice import AudioService
+from ovos_utils.log import LOG
 from ovos_utils.parse import match_one
 from ovos_workshop.skills.common_play import OVOSCommonPlaybackSkill
 from ovos_plugin_common_play.ocp import MediaType, PlaybackType
 import re
 import requests
 import datetime
-
-LOGGER = getLogger(__name__)
 
 
 class TVHeadendRadio(OVOSCommonPlaybackSkill):
@@ -43,14 +40,14 @@ class TVHeadendRadio(OVOSCommonPlaybackSkill):
         match = re.search(self.translate_regex("on_tvheadend"), phrase)
         if match:
             data = re.sub(self.translate_regex("on_tvheadend"), "", phrase)
-            LOGGER.debug(f"Found '{data}' with 'on_tvheadend' in '{phrase}'")
+            LOG.debug(f"Found '{data}' with 'on_tvheadend' in '{phrase}'")
             phrase = data
         match, confidence = match_one(phrase, self.channels)
         key_list = list(self.channels.keys())
         val_list = list(self.channels.values())
         pos = val_list.index(match)
         station = key_list[pos]
-        LOGGER.info(f"Match level {confidence} for {phrase}")
+        LOG.info(f"Match level {confidence} for {phrase}")
         yield {
           "match_confidence": confidence * 100,
           "media_type": MediaType.RADIO,
@@ -60,7 +57,7 @@ class TVHeadendRadio(OVOSCommonPlaybackSkill):
           "skill_id": self.skill_id            
         }
         r_match, r_confidence = match_one(phrase + " radio", self.channels)
-        LOGGER.info(f"Match level {r_confidence} for {phrase} radio")
+        LOG.info(f"Match level {r_confidence} for {phrase} radio")
         pos = val_list.index(r_match)
         station = key_list[pos]
         return {
@@ -79,7 +76,7 @@ class TVHeadendRadio(OVOSCommonPlaybackSkill):
         pos = val_list.index(url)
         station = key_list[pos]
         self.stop()
-        LOGGER.info(f"Playing from \n{url}")
+        LOG.info(f"Playing from \n{url}")
         self.speak_dialog("start", data={"station": station}, wait=True)
         self.CPS_play(url, utterance=self.backend)
 
@@ -103,7 +100,7 @@ class TVHeadendRadio(OVOSCommonPlaybackSkill):
             self.backend["vlc"] = backends["vlc"]
             self.backend["vlc"]["normal_volume"] = 70
             self.backend["vlc"]["duck_volume"] = 5
-            LOGGER.debug("Set vlc as backend to be used")
+            LOG.debug("Set vlc as backend to be used")
         self.regexes = {}
 
     def get_settings(self):
@@ -115,7 +112,7 @@ class TVHeadendRadio(OVOSCommonPlaybackSkill):
         self.check_internet()
 
     def check_internet(self):
-        LOGGER.info("Checking for connection to tvheadend server")
+        LOG.info("Checking for connection to tvheadend server")
         names = []
         aliases = []
         username = self.settings.get("username", "")
@@ -130,7 +127,7 @@ class TVHeadendRadio(OVOSCommonPlaybackSkill):
                 or (len(r.text) < 100)
                 or (data[0] != "#EXTM3U")
             ):
-                LOGGER.info(
+                LOG.info(
                     "Unable to get channel list from tvheadend server or wrong format"
                 )
                 self.schedule_event(
@@ -156,10 +153,10 @@ class TVHeadendRadio(OVOSCommonPlaybackSkill):
                         f"http://{username}:{password}@{full_url[0][7:]}?profile=audio"
                     )
                 except:
-                    LOGGER.info("Problem parsing channel info (wrong format?)")
+                    LOG.info("Problem parsing channel info (wrong format?)")
                     next
                 if (len(name) < 2) or (len(url) < 50):
-                    LOGGER.info(
+                    LOG.info(
                         "Problem parsing channel info:\n"
                         + data[i - 2]
                         + "\n"
@@ -172,10 +169,10 @@ class TVHeadendRadio(OVOSCommonPlaybackSkill):
                     alias = aliases[names.index(name.lower())]
                     self.channels[alias.lower()] = url
                     ch_count += 1
-                    LOGGER.debug(f'Added alias "{alias}" for channel "{name}"')
-            LOGGER.info(f"Added {ch_count} channels")
+                    LOG.debug(f'Added alias "{alias}" for channel "{name}"')
+            LOG.info(f"Added {ch_count} channels")
         except:
-            LOGGER.info("Unable to contact tvheadend server")
+            LOG.info("Unable to contact tvheadend server")
             self.schedule_event(
                 self.check_internet,
                 datetime.datetime.now() + datetime.timedelta(minutes=1),

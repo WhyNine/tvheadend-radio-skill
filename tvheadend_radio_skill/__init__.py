@@ -14,7 +14,7 @@
 #
 from ovos_utils.log import LOG
 from ovos_utils.parse import match_one
-from ovos_workshop.skills.common_play import OVOSCommonPlaybackSkill
+from ovos_workshop.skills.common_play import OVOSCommonPlaybackSkill, ocp_search
 from ovos_plugin_common_play.ocp import MediaType, PlaybackType, MycroftAudioService
 import re
 import requests

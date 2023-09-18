@@ -12,11 +12,10 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #
-from mycroft.skills.audioservice import AudioService
 from ovos_utils.log import LOG
 from ovos_utils.parse import match_one
 from ovos_workshop.skills.common_play import OVOSCommonPlaybackSkill
-from ovos_plugin_common_play.ocp import MediaType, PlaybackType
+from ovos_plugin_common_play.ocp import MediaType, PlaybackType, MycroftAudioService
 import re
 import requests
 import datetime
@@ -93,7 +92,7 @@ class TVHeadendRadio(OVOSCommonPlaybackSkill):
     def initialize(self):
         self.settings_change_callback = self.on_settings_changed
         self.get_settings()
-        self.audio = AudioService(self.bus)
+        self.audio = MycroftAudioService(self.bus)
         backends = self.audio.available_backends()
         self.backend = {}
         if "vlc" in backends.keys():
@@ -107,7 +106,7 @@ class TVHeadendRadio(OVOSCommonPlaybackSkill):
         self.channels = {}
         servername = self.settings.get("servername", "")
         if len(servername) == 0:
-            LOGGER.info("Missing server name")
+            LOG.info("Missing server name")
             return
         self.check_internet()
 

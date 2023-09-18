@@ -15,7 +15,7 @@
 from ovos_utils.log import LOG
 from ovos_utils.parse import match_one
 from ovos_workshop.skills.common_play import OVOSCommonPlaybackSkill, ocp_search
-from ovos_plugin_common_play.ocp import MediaType, PlaybackType, MycroftAudioService
+from ovos_plugin_common_play.ocp import MediaType, PlaybackType
 import re
 import requests
 import datetime
@@ -92,14 +92,14 @@ class TVHeadendRadio(OVOSCommonPlaybackSkill):
     def initialize(self):
         self.settings_change_callback = self.on_settings_changed
         self.get_settings()
-        self.audio = MycroftAudioService(self.bus)
-        backends = self.audio.available_backends()
-        self.backend = {}
-        if "vlc" in backends.keys():
-            self.backend["vlc"] = backends["vlc"]
-            self.backend["vlc"]["normal_volume"] = 70
-            self.backend["vlc"]["duck_volume"] = 5
-            LOG.debug("Set vlc as backend to be used")
+#        self.audio = MycroftAudioService(self.bus)
+#        backends = self.audio.available_backends()
+#        self.backend = {}
+#        if "vlc" in backends.keys():
+#            self.backend["vlc"] = backends["vlc"]
+#            self.backend["vlc"]["normal_volume"] = 70
+#            self.backend["vlc"]["duck_volume"] = 5
+#            LOG.debug("Set vlc as backend to be used")
         self.regexes = {}
 
     def get_settings(self):
